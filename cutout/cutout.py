@@ -9,6 +9,7 @@ from cutout.utils import zero_out_batched, zero_out, compute_saliency_map, max_s
 
 import logging
 from logging.handlers import RotatingFileHandler
+os.makedirs('logs', exist_ok=True)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
