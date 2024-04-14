@@ -1,5 +1,6 @@
 # local files
 trained_models/
+logs/
 # compiled output
 /dist
 /tmp
