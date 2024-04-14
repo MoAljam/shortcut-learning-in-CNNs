@@ -61,7 +61,7 @@ class DynamicCutoutLayer(tf.keras.layers.Layer):
         '''
         x, y = input
         if not training or tf.random.uniform([]) > DYNAMIC_CUTOUT_PROB:
-            return input
+            return x
         # compute saliency maps and apply cutout
         # only if the prediction is correct
         # get the gradients of the model with respect to the input image
@@ -74,6 +74,7 @@ class DynamicCutoutLayer(tf.keras.layers.Layer):
         x = self.blur_method(x, max_coords, mask_size=self.mask_size, shape=self.shape)
         return x
     
+    @tf.function
     def get_network_attention(self, input, model):
         '''
         Get the network attention based on the saliency map
@@ -83,7 +84,8 @@ class DynamicCutoutLayer(tf.keras.layers.Layer):
         return:
             :tf.Tensor: the network attention
         '''
-        saliency_map = self.saliency_method(model, input)
+        x, y = input[0], input[1]
+        saliency_map = self.saliency_method(model, x, y)
         return saliency_map
     
     def get_config(self):

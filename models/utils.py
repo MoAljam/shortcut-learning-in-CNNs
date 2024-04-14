@@ -1,4 +1,6 @@
 import tensorflow as tf
+import os
+from datetime import datetime
 
 class TestCallback(tf.keras.callbacks.Callback):
     '''
@@ -30,3 +32,18 @@ class TestCallback(tf.keras.callbacks.Callback):
     #     '''
     #     self.test_results = {'test_loss': [], 'test_accuracy': [], 'epoch': []}
     #     return super().on_train_begin(logs)
+
+
+class SaveModelWeights(tf.keras.callbacks.Callback):
+    def __init__(self, n=2, save_path='trained_models/'):
+        super().__init__()
+        self.n = n
+        self.save_path= save_path
+
+    def on_epoch_end(self, epoch, logs=None):
+        if epoch % self.n:
+            os.makedirs(self.save_path, exist_ok=True)
+            timestamp = datetime.now().strftime("%Y%m%d-%H%M%S") 
+            self.model.save_weights(f'{self.save_path}simpleCNN_{timestamp}_EP_{epoch}.h5')
+
+        # return super().on_epoch_end(epoch, logs)

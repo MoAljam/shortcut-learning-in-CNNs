@@ -80,7 +80,6 @@ class BaseModel(models.Model):
     
     def on_epoch_end(self):
         self.current_epoch += 1  # increment the epoch counter
-
     # def on_epoch_begin(self):
     #     pass
 
