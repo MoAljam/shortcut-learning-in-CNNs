@@ -44,6 +44,6 @@ class SaveModelWeights(tf.keras.callbacks.Callback):
         if epoch % self.n:
             os.makedirs(self.save_path, exist_ok=True)
             timestamp = datetime.now().strftime("%Y%m%d-%H%M%S") 
-            self.model.save_weights(f'{self.save_path}simpleCNN_{timestamp}_EP_{epoch}.h5')
+            self.model.save_weights(f'{self.save_path}{self.model.name}_{timestamp}_EP_{epoch}.h5')
 
         # return super().on_epoch_end(epoch, logs)
