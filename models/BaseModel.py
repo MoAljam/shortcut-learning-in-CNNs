@@ -9,6 +9,7 @@ sys.path.append('..')
 from cutout.cutout import DynamicCutoutLayer
 
 import logging
+os.creatdir('logs', exist_ok=True)
 from logging.handlers import RotatingFileHandler
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

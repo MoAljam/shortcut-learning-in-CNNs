@@ -3,6 +3,7 @@ import numpy as np
 
 import logging
 from logging.handlers import RotatingFileHandler
+os.creatdir('logs', exist_ok=True)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
