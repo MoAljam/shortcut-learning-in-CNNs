@@ -74,6 +74,18 @@ class DynamicCutoutLayer(tf.keras.layers.Layer):
         x = self.blur_method(x, max_coords, mask_size=self.mask_size, shape=self.shape)
         return x
     
+    def get_network_attention(self, input, model):
+        '''
+        Get the network attention based on the saliency map
+        args:
+            :input: tf.Tensor, the input image
+            :model: tf.keras.Model, the model to compute the saliency map
+        return:
+            :tf.Tensor: the network attention
+        '''
+        saliency_map = self.saliency_method(model, input)
+        return saliency_map
+    
     def get_config(self):
         return {
             'mask_size': self.mask_size,
