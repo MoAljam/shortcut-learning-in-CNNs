@@ -1,4 +1,5 @@
 import tensorflow as tf
+import matplotlib.pyplot as plt
 import numpy as np
 import os
 
@@ -118,3 +119,80 @@ def zero_out_batched(input, coords, mask_size, shape='square'):
         dtype=input.dtype
     )
     return output
+
+
+
+# plotting functions ------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
+
+def plot_progress(history, test_results, model_name, title='Training Progress'):
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    fig.suptitle(f'{model_name} {title}')
+    # accuracy
+    axes[0].plot(history.history['accuracy'], label='train')
+    axes[0].plot(history.history['val_accuracy'], label='val')
+    axes[0].plot(test_results['test_accuracy'], label='test')
+    axes[0].set_title('Accuracy')
+    axes[0].set_xlabel('Epoch')
+    axes[0].set_ylabel('Accuracy')
+    axes[0].legend()
+    # loss
+    axes[1].plot(history.history['loss'], label='train')
+    axes[1].plot(history.history['val_loss'], label='val')
+    axes[1].plot(test_results['test_loss'], label='test')
+    axes[1].set_title('Loss')
+    axes[1].set_xlabel('Epoch')
+    axes[1].set_ylabel('Loss')
+    axes[1].legend()
+    plt.tight_layout()
+    plt.show()
+
+    return fig, axes
+
+
+def plot_attention(input:tf.data.Dataset, model:tf.keras.Model, cutout_layer, label_names, num_samples=4, title='Data Samples'):
+    # Define the number of columns and rows
+    num_columns = 3  # Since each sample has 3 images side by side
+    num_rows = num_samples  # Each sample needs its own row
+    fig_width = num_columns * 6
+    fig_height = num_rows * 5
+
+    # Create the subplots
+    fig, axes = plt.subplots(num_rows, num_columns, figsize=(fig_width, fig_height))
+    fig.suptitle(title)
+
+    # Flatten the array of axes if it's not already flat (needed if num_rows = 1)
+    axes = axes.flatten()
+
+    for i, (image, label) in enumerate(input.take(num_samples)):
+        # Calculate the column start index
+        col_start = i * num_columns
+
+        # Process the image and predictions
+        image_saliency = cutout_layer.get_network_attention((image, label), model)
+        image_cutout = cutout_layer((image, label), model, training=True)
+        
+        # Display images
+        axes[col_start].imshow((image[0] + 1) / 2)
+        axes[col_start+1].imshow((image_saliency[0] + 1) / 2)
+        axes[col_start+2].imshow((image_cutout[0] + 1) / 2)
+        
+        # Display predictions and labels
+        pred = model.predict(image)
+        true_label = label_names[np.argmax(label[0])]
+        pred_label = label_names[np.argmax(pred[0])]
+        label_text = f"True: {true_label}\nPredicted: {pred_label}"
+        
+        axes[col_start].set_title(label_text)
+        axes[col_start+1].set_title('Saliency')
+        axes[col_start+2].set_title('Cutout')
+        
+        for j in range(3):
+            axes[col_start + j].axis('off')
+
+    plt.tight_layout()
+    plt.show()
+
+    return fig, axes

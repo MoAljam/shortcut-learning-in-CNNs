@@ -60,7 +60,7 @@ class DynamicCutoutLayer(tf.keras.layers.Layer):
             :tf.Tensor: the input image with dynamic cutout applied
         '''
         x, y = input
-        if not training or tf.random.uniform([]) > DYNAMIC_CUTOUT_PROB:
+        if not training or tf.random.uniform([]) > self.cutout_prob:
             return x
         # compute saliency maps and apply cutout
         # only if the prediction is correct

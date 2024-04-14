@@ -50,8 +50,8 @@ class ResNet(BaseModel):
         :num_classes: int, the number of classes
         :type: str, the type of the ResNet model, either 'resnet18' or 'resnet34'
     '''
-    def __init__(self, input_shape, num_classes, type='resnet18'):
-        super(ResNet, self).__init__()
+    def __init__(self, input_shape, num_classes, type='resnet18', *args, **kwargs):
+        super(ResNet, self).__init__(*args, **kwargs)
         self.num_classes = num_classes
         self.type = type
         self._build_resnet(input_shape, num_classes, type)

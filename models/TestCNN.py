@@ -25,8 +25,8 @@ class SimpleCNN(BaseModel):
     '''
     Simple CNN model class, inherits from BaseModel
     '''
-    def __init__(self, output_shape=10):
-        super(SimpleCNN, self).__init__()
+    def __init__(self, output_shape=10, *args, **kwargs):
+        super(SimpleCNN, self).__init__(*args, **kwargs)
 
         self.conv1 = layers.Conv2D(32, 3, activation='relu')
         self.pool1 = layers.MaxPooling2D()
